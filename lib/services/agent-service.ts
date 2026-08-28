@@ -95,7 +95,7 @@ export class AgentService {
     // Hard failure — do NOT generate fake reasoning
     if (!opinion) {
       console.error(`[Gemini] ${this.agentLabel(input.agentType)} — FAILED after ${MAX_ATTEMPTS} attempts`);
-      return {
+      const failedRun: AgentRun = {
         id: runId,
         evaluation_id: evaluationId,
         agent_type: input.agentType,
@@ -106,11 +106,11 @@ export class AgentService {
         recommendation: 'HOLD',
         confidence: 0,
         output: null,
-        error_message: 'LLM_CALL_FAILED',
         started_at: now,
         completed_at: new Date().toISOString(),
         created_at: now
-      } as any;
+      };
+      return failedRun;
     }
 
     return {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Sparkles, 
@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { PipelineStepper } from '@/components/layout/PipelineStepper';
 import { DocumentIntakeZone, DocumentSlotState } from '@/components/intake/DocumentIntakeZone';
+import { EvaluationStatus } from '@/lib/validation/schemas';
+import { RawDocumentInput } from '@/lib/services/profile-service';
 
 export default function EvaluatePage() {
   const router = useRouter();
@@ -169,8 +171,17 @@ REQUIREMENTS:
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [currentStage, setCurrentStage] = useState<string>('IDLE');
+  const [currentStage, setCurrentStage] = useState<EvaluationStatus>('DOCUMENTS_PENDING');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Track progress-animation timeout IDs so they can be cleared on unmount
+  const stageTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    return () => {
+      stageTimerRefs.current.forEach(clearTimeout);
+    };
+  }, []);
 
   const handleSlotChange = (key: string, updated: DocumentSlotState) => {
     setSlots(prev => ({
@@ -262,7 +273,7 @@ Ph.D. in Computer Science from UC Berkeley. 6 NeurIPS publications on LLM quanti
 
     try {
       // Build normalized documents payload
-      const documentsPayload: any[] = [];
+      const documentsPayload: RawDocumentInput[] = [];
 
       Object.entries(slots).forEach(([key, slot]) => {
         const text = slot.useManualText
@@ -280,10 +291,13 @@ Ph.D. in Computer Science from UC Berkeley. 6 NeurIPS publications on LLM quanti
         }
       });
 
-      // Visual progress feedback
-      setTimeout(() => setCurrentStage('AGENTS_RUNNING'), 1000);
-      setTimeout(() => setCurrentStage('DEBATE_IN_PROGRESS'), 2500);
-      setTimeout(() => setCurrentStage('DELIBERATING'), 4200);
+      // Visual progress feedback (cosmetic — actual stages happen server-side)
+      stageTimerRefs.current.forEach(clearTimeout);
+      stageTimerRefs.current = [
+        setTimeout(() => setCurrentStage('AGENTS_RUNNING'), 1000),
+        setTimeout(() => setCurrentStage('DEBATE_IN_PROGRESS'), 2500),
+        setTimeout(() => setCurrentStage('DELIBERATING'), 4200)
+      ];
 
       const res = await fetch('/api/evaluate', {
         method: 'POST',
@@ -303,6 +317,7 @@ Ph.D. in Computer Science from UC Berkeley. 6 NeurIPS publications on LLM quanti
         setIsSubmitting(false);
       }
     } catch (err: any) {
+      stageTimerRefs.current.forEach(clearTimeout);
       setErrorMsg(err.message || 'Network error occurred during evaluation.');
       setIsSubmitting(false);
     }
@@ -333,7 +348,7 @@ Ph.D. in Computer Science from UC Berkeley. 6 NeurIPS publications on LLM quanti
               Stage: {currentStage}
             </span>
           </div>
-          <PipelineStepper status={currentStage as any} />
+          <PipelineStepper status={currentStage} />
         </div>
       )}
 

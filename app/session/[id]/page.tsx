@@ -93,7 +93,7 @@ export default function SessionWorkspacePage() {
                 <ArrowLeft className="w-4 h-4 inline mr-1" />
               </Link>
               <span className="case-label">CASE DOCKET · {evaluation.id}</span>
-              {(evaluation as any).evaluation_mode === 'REAL' ? (
+              {evaluation.evaluation_mode === 'REAL' ? (
                 <span className="stamp-white">REAL LLM</span>
               ) : (
                 <span className="stamp">DEMO / MOCK</span>

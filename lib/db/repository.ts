@@ -179,7 +179,9 @@ class DatabaseRepository {
   }
 }
 
-// Global singleton instance across Next.js API routes
+// Global singleton — persists across Next.js hot-reloads in dev and across module re-evaluations.
+// Note: in a true serverless deployment (Vercel Edge/Lambda), each cold start gets a fresh instance;
+// this is expected for an in-memory store. The singleton prevents duplicates within the same process.
 const globalForDb = globalThis as unknown as { dbRepository: DatabaseRepository };
-export const dbRepository = globalForDb.dbRepository || new DatabaseRepository();
-if (process.env.NODE_ENV !== 'production') globalForDb.dbRepository = dbRepository;
+export const dbRepository = globalForDb.dbRepository ?? new DatabaseRepository();
+globalForDb.dbRepository = dbRepository;

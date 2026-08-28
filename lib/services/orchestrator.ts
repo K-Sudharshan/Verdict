@@ -45,9 +45,9 @@ export class EvaluationOrchestrator {
 
     // Check for hard failures in REAL mode before continuing
     if (mode === 'REAL') {
-      const failedAgents = agentRuns.filter((r: any) => r.status === 'FAILED');
+      const failedAgents = agentRuns.filter(r => r.status === 'FAILED');
       if (failedAgents.length > 0) {
-        const names = failedAgents.map((r: any) => r.agent_type).join(', ');
+        const names = failedAgents.map(r => r.agent_type).join(', ');
         throw new Error(`LLM_CALL_FAILED:AGENTS [${names}]`);
       }
     }

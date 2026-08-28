@@ -7,7 +7,8 @@ import {
   DebateSession,
   Evidence,
   Claim,
-  AgentType
+  AgentType,
+  RevisionType
 } from '../validation/schemas';
 import { GeminiAIClient } from '../ai/gemini-client';
 import { DEBATE_CHALLENGE_PROMPT, DEBATE_RESPONSE_PROMPT } from '../ai/prompts/debate-turn';
@@ -181,7 +182,7 @@ export class DebateService {
             id: `rev_${Date.now()}`,
             agent_run_id: targetRun.id,
             debate_message_id: msgId,
-            revision_type: res.data.action as any,
+            revision_type: res.data.action as RevisionType,
             revised_recommendation: res.data.revised_recommendation || 'HIRE',
             revised_confidence: res.data.revised_confidence || 0.82,
             reasoning: res.data.reasoning || 'Position revised after cross-examination.',

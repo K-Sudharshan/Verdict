@@ -1,4 +1,4 @@
-import { CandidateProfile, Claim, Evidence, DocumentType } from '../validation/schemas';
+import { CandidateProfile, Claim, Evidence, DocumentType, ClaimCategory } from '../validation/schemas';
 import { GeminiAIClient } from '../ai/gemini-client';
 import { PROFILE_BUILDER_SYSTEM_PROMPT } from '../ai/prompts/profile-builder';
 
@@ -141,7 +141,7 @@ export class ProfileService {
       evaluation_id: evaluationId,
       candidate_profile_id: profileId,
       claim_text: claimText,
-      category: (idx === 3 ? 'LEADERSHIP' : idx === 1 ? 'ACHIEVEMENT' : 'EXPERIENCE') as any,
+      category: (idx === 3 ? 'LEADERSHIP' : idx === 1 ? 'ACHIEVEMENT' : 'EXPERIENCE') as ClaimCategory,
       status: 'UNVERIFIED' as const,
       created_at: now
     }));
