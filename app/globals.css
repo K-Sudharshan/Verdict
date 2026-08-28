@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,700;1,400&family=Abril+Fatface&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Abril Fatface', serif;
+  --font-body: 'Archivo', sans-serif;
+  --background: #000000;
+  --foreground: #ededed;
+  --ink: #ffffff;
+  --ink-dim: #a1a1aa;
+  --ink-faint: #52525b;
+  --rule: #1c1c1c;
+}
+
+html {
+  font-size: 16px;
+  background-color: #000000;
+  color: #ededed;
+}
+
+body {
+  color: var(--foreground);
+  background-color: #000000;
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Display hierarchy ─── */
+h1, h2 {
+  font-family: var(--font-display);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+h3, h4, h5, h6, p, span, label, button, input, textarea, select {
+  font-family: var(--font-body);
+}
+
+p { line-height: 1.75; margin-bottom: 0; }
+
+/* ─── Dossier Design Tokens ─── */
+@layer components {
+
+  /* Hairline separator */
+  .dossier-rule {
+    @apply border-t border-zinc-900 my-0;
+  }
+
+  /* Section wrapper — like a filed document page */
+  .dossier-section {
+    @apply border-t border-zinc-900 pt-6 pb-6;
+  }
+
+  /* Case-file page wrapper */
+  .dossier-page {
+    @apply bg-black border border-zinc-900;
+  }
+
+  /* Stamp label — replaces colored pill badges */
+  .stamp {
+    @apply inline-block text-[10px] font-sans tracking-[0.14em] uppercase
+           px-1.5 py-0.5 border border-zinc-700 text-zinc-400
+           font-medium;
+  }
+  .stamp-white {
+    @apply inline-block text-[10px] font-sans tracking-[0.14em] uppercase
+           px-1.5 py-0.5 border border-white text-white
+           font-medium;
+  }
+  .stamp-faint {
+    @apply inline-block text-[10px] font-sans tracking-[0.14em] uppercase
+           px-1.5 py-0.5 border border-zinc-800 text-zinc-600
+           font-medium;
+  }
+
+  /* Case-label — replaces chip/tag categories */
+  .case-label {
+    @apply text-[10px] font-sans tracking-[0.14em] uppercase text-zinc-500 font-medium;
+  }
+
+  /* Agent monogram block */
+  .agent-monogram {
+    @apply text-[11px] font-sans tracking-[0.12em] uppercase font-bold
+           text-zinc-300 w-10 shrink-0 pt-0.5;
+  }
+
+  /* Dossier entry row — a single evidence/finding line */
+  .dossier-entry {
+    @apply flex gap-4 py-4 border-t border-zinc-900 first:border-t-0;
+  }
+
+  /* Dossier table row */
+  .dossier-row {
+    @apply flex items-baseline gap-4 py-3 border-t border-zinc-900;
+  }
+}
+
+/* ─── Minimal scrollbar ─── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #1c1c1c; }
+::-webkit-scrollbar-thumb:hover { background: #2a2a2a; }
