@@ -101,17 +101,16 @@ export const ClaimRiskMatrix: React.FC<ClaimRiskMatrixProps> = ({
                   {claim.claim_text}
                 </p>
 
-                {claim.corroborating_evidence_ids && claim.corroborating_evidence_ids.length > 0 && (
+                {evidenceList.filter(e => e.claim_id === claim.id).length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-zinc-900">
                     <span className="text-[10px] text-zinc-600 font-mono">Primary Source:</span>
-                    {claim.corroborating_evidence_ids.map(evId => {
-                      const ev = evidenceList.find(e => e.id === evId);
+                    {evidenceList.filter(e => e.claim_id === claim.id).map(ev => {
                       const label = getEvidenceDisplayLabel(ev, { short: true });
                       return (
                         <button
-                          key={evId}
+                          key={ev.id}
                           type="button"
-                          onClick={() => ev && onSelectEvidence(ev)}
+                          onClick={() => onSelectEvidence(ev)}
                           className="inline-flex items-center gap-1 text-[10px] font-sans text-zinc-500 hover:text-white underline underline-offset-2 transition-colors"
                         >
                           {label} <ExternalLink className="w-2.5 h-2.5" />

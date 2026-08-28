@@ -58,8 +58,8 @@ export const EvidenceLedgerModal: React.FC<EvidenceLedgerModalProps> = ({ eviden
           {/* Metadata Row */}
           <div className="grid grid-cols-2 gap-4 border-t border-zinc-900 pt-4">
             <div>
-              <p className="case-label mb-1">document type</p>
-              <p className="text-zinc-300 font-mono">{evidence.document_type}</p>
+              <p className="case-label mb-1">source document</p>
+              <p className="text-zinc-300 font-mono">{evidence.location?.document_name || (evidence.document_id.includes('transcript') ? 'Academic Transcript' : evidence.document_id.includes('jd') ? 'Job Description' : 'Candidate Resume')}</p>
             </div>
 
             <div>

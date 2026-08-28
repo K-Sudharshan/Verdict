@@ -201,16 +201,21 @@ export const DocumentIntakeZone: React.FC<DocumentIntakeZoneProps> = ({
                   <textarea
                     value={slot.manualText}
                     onChange={(e) => {
+                      const val = e.target.value;
                       onSlotChange(key, {
                         ...slot,
-                        manualText: e.target.value,
-                        status: e.target.value.trim() ? 'READY' : 'IDLE',
-                        extractedData: e.target.value.trim() ? {
-                          text: e.target.value.trim(),
+                        manualText: val,
+                        status: val.trim() ? 'READY' : 'IDLE',
+                        extractedData: val.trim() ? {
+                          id: `doc_${key}_manual_${Date.now()}`,
+                          documentType: slot.type,
+                          originalFilename: `${key}-manual.txt`,
+                          fileSizeBytes: val.length,
                           pageCount: 1,
-                          pages: [{ pageNumber: 1, text: e.target.value.trim(), characterCount: e.target.value.length }],
-                          metadata: { fileName: `${key}-manual.txt`, fileSize: e.target.value.length, fileType: 'text/plain', extractedAt: new Date().toISOString() },
-                          provenance: { documentType: slot.type, documentId: `doc_${key}_manual`, integrityHash: 'manual_hash' }
+                          fullText: val.trim(),
+                          pages: [{ pageNumber: 1, text: val.trim(), characterCount: val.length }],
+                          extractedAt: new Date().toISOString(),
+                          status: 'READY'
                         } : null
                       });
                     }}
@@ -278,11 +283,11 @@ export const DocumentIntakeZone: React.FC<DocumentIntakeZoneProps> = ({
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
                           <div className="truncate max-w-[200px] sm:max-w-[260px]">
-                            <span className="text-xs font-bold text-white block truncate" title={slot.extractedData.metadata.fileName}>
-                              {slot.extractedData.metadata.fileName}
+                            <span className="text-xs font-bold text-white block truncate" title={slot.extractedData.originalFilename}>
+                              {slot.extractedData.originalFilename}
                             </span>
                             <span className="text-[10px] font-mono text-zinc-400">
-                              {formatBytes(slot.extractedData.metadata.fileSize)} • {slot.extractedData.pageCount} page(s) • {slot.extractedData.text.length} chars
+                              {formatBytes(slot.extractedData.fileSizeBytes)} • {slot.extractedData.pageCount} page(s) • {slot.extractedData.fullText.length} chars
                             </span>
                           </div>
                         </div>
@@ -314,8 +319,8 @@ export const DocumentIntakeZone: React.FC<DocumentIntakeZoneProps> = ({
                             Extracted Plain Text Sample:
                           </span>
                           <div className="p-3 rounded-lg bg-black border border-zinc-800 max-h-36 overflow-y-auto text-[11px] font-mono text-zinc-300 whitespace-pre-wrap leading-relaxed">
-                            {slot.extractedData.text.slice(0, 800)}
-                            {slot.extractedData.text.length > 800 ? '...' : ''}
+                            {slot.extractedData.fullText.slice(0, 800)}
+                            {slot.extractedData.fullText.length > 800 ? '...' : ''}
                           </div>
                         </div>
                       )}

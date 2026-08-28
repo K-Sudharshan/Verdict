@@ -116,16 +116,14 @@ export const CandidateProfileView: React.FC<CandidateProfileViewProps> = ({
               <div className="flex-1 space-y-1.5">
                 <div className="flex items-baseline justify-between gap-2">
                   <p className="text-sm font-sans font-semibold text-white">
-                    {exp.role_title} <span className="text-zinc-500 font-normal">at</span> {exp.company}
+                    {exp.title} <span className="text-zinc-500 font-normal">at</span> {exp.organization}
                   </p>
                 </div>
 
-                {exp.highlights && exp.highlights.length > 0 && (
-                  <ul className="space-y-1 text-xs text-zinc-300 font-sans leading-relaxed list-disc pl-4 mt-2">
-                    {exp.highlights.map((h, hIdx) => (
-                      <li key={hIdx}>{h}</li>
-                    ))}
-                  </ul>
+                {exp.description && (
+                  <p className="text-xs text-zinc-300 font-sans leading-relaxed">
+                    {exp.description}
+                  </p>
                 )}
               </div>
             </div>
@@ -142,7 +140,7 @@ export const CandidateProfileView: React.FC<CandidateProfileViewProps> = ({
               <div key={idx} className="dossier-entry">
                 <span className="font-mono text-[11px] text-zinc-600 w-28 shrink-0 pt-0.5">PROJ #{idx + 1}</span>
                 <div className="flex-1 space-y-1">
-                  <p className="text-sm font-sans font-semibold text-white">{proj.title}</p>
+                  <p className="text-sm font-sans font-semibold text-white">{proj.name}</p>
                   <p className="text-xs text-zinc-400 font-sans leading-relaxed">{proj.description}</p>
                   {proj.technologies && proj.technologies.length > 0 && (
                     <p className="text-[10px] font-mono text-zinc-600 pt-1">
@@ -177,7 +175,7 @@ export const CandidateProfileView: React.FC<CandidateProfileViewProps> = ({
                       {label} <ExternalLink className="w-3 h-3" />
                     </button>
                     <span className="text-[10px] font-mono text-zinc-600 uppercase">
-                      {ev.document_type}
+                      {ev.location?.document_name || (ev.document_id.includes('transcript') ? 'Transcript' : ev.document_id.includes('jd') ? 'Job Description' : 'Resume')}
                     </span>
                   </div>
                   <p className="text-xs text-zinc-400 font-sans leading-relaxed italic">
